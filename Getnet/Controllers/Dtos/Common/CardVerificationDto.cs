@@ -4,13 +4,16 @@ using System.Text.Json.Serialization;
 
 namespace Getnet.Entities.Dto;
 
+/// <summary>
+/// Conjunto de dados do cartão.
+/// </summary>
 public class CardVerificationDto
 {
     /// <summary>
     /// Número do cartão tokenizado. Gerado previamente por meio do endpoint /v1/tokens/card.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(128,128, ErrorMessage = "O campo deve ter 128 caracteres.")]
+    [Length(128, 128, ErrorMessage = "O campo deve ter 128 caracteres.")]
     [JsonPropertyName("number_token")]
     public string NumberToken { get; set; } = string.Empty;
 

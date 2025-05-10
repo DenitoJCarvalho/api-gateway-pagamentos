@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Getnet.Controllers.Dtos.Common;
 
+/// <summary>
+/// Conjunto de dados referentes ao dispositivo utilizado pelo comprador.
+/// </summary>
 public class DeviceDto
 {
     /// <summary>

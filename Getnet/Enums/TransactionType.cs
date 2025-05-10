@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace Getnet.Enums;
 
+/// <summary>
+/// Tipo de transação.
+/// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum TransactionType
 {

@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace Getnet.Enums;
 
+/// <summary>
+/// Tipos de subcomércio.
+/// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ForeignType
 {

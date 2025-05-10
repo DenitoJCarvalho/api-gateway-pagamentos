@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace Getnet.Enums;
 
+/// <summary>
+/// Tipo de criptograma utilizado pelo TSP (Token Service Provider).
+/// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum TokenizationType
 {

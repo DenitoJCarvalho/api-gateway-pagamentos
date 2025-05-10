@@ -5,13 +5,16 @@ using Getnet.Enums;
 
 namespace Getnet.Controllers.Dtos.Common;
 
+/// <summary>
+/// Dados de identificação dos sub-comércios.
+/// </summary>
 public class SubMerchantDto
 {
     /// <summary>
     /// ID do sub comércio.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1,15, ErrorMessage = "Campo deve ter entre 1 a 15 caracteres.")]
+    [Length(1, 15, ErrorMessage = "Campo deve ter entre 1 a 15 caracteres.")]
     [JsonPropertyName("identification_code")]
     public string IdentificationCode { get; set; } = string.Empty;
 
@@ -19,7 +22,7 @@ public class SubMerchantDto
     /// Nome do recebedor ou Razão Social do Subcomércio. (Deve corresponder ao cadastro existente no site gov.br)
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1,80, ErrorMessage = "Campo deve ter entre 1 a 80 caracteres.")]
+    [Length(1, 80, ErrorMessage = "Campo deve ter entre 1 a 80 caracteres.")]
     [JsonPropertyName("business_name")]
     public string BusinessName { get; set; } = string.Empty;
 
@@ -34,7 +37,7 @@ public class SubMerchantDto
     /// CNPJ ou CPF do Subcomércio.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(11,14, ErrorMessage = "Campo deve ter entre 11 a 14 caracteres.")]
+    [Length(11, 14, ErrorMessage = "Campo deve ter entre 11 a 14 caracteres.")]
     [JsonPropertyName("document_number")]
     public string DocumentNumber { get; set; } = string.Empty;
 
@@ -48,7 +51,7 @@ public class SubMerchantDto
     /// Logradouro do Subcomércio
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1,40, ErrorMessage = "Campo deve ter entre 1 a 40 caracteres.")]
+    [Length(1, 40, ErrorMessage = "Campo deve ter entre 1 a 40 caracteres.")]
     [JsonPropertyName("address")]
     public string Address { get; set; } = string.Empty;
 
@@ -56,7 +59,7 @@ public class SubMerchantDto
     /// Cidade do Subcomércio.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1,13, ErrorMessage = "Campo deve ter entre 1 a 13 caracteres.")]
+    [Length(1, 13, ErrorMessage = "Campo deve ter entre 1 a 13 caracteres.")]
     [JsonPropertyName("city")]
     public string City { get; set; } = string.Empty;
 
@@ -64,7 +67,7 @@ public class SubMerchantDto
     /// Estado do Subcomércio.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1,2, ErrorMessage = "Campo deve ter entre 1 a 2 caracteres.")]
+    [Length(1, 2, ErrorMessage = "Campo deve ter entre 1 a 2 caracteres.")]
     [JsonPropertyName("state")]
     public string State { get; set; } = string.Empty;
 
@@ -72,7 +75,7 @@ public class SubMerchantDto
     /// Código Postal (CEP) do Subcomércio.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(8,8, ErrorMessage = "Campo deve ter entre 1 a 8 caracteres.")]
+    [Length(8, 8, ErrorMessage = "Campo deve ter entre 1 a 8 caracteres.")]
     [JsonPropertyName("postal_code")]
-    public string PostalCode { get; set; } = string.Empty; 
+    public string PostalCode { get; set; } = string.Empty;
 }

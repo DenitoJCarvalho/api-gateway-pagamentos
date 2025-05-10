@@ -1,9 +1,10 @@
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
 
 namespace Getnet.Enums;
 
-
+/// <summary>
+/// Tipo de transação realizada com credenciais armazenadas.
+/// </summary>
 public enum CredentialsOnFileType
 {
     /// <summary>

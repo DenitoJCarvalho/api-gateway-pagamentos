@@ -32,6 +32,12 @@ public class ProcessPaymentController : ControllerBase
 
     #region Gerar Token
 
+    /// <summary>
+    /// Gera um token de autenticação para uso nas requisições à API Getnet.
+    /// </summary>
+    /// <returns>Retorna o token de autenticação em caso de sucesso (HTTP 200).
+    /// Em caso de erro, retorna um <see cref="ProblemDetails"/> com informações sobre a falha.</returns>
+
     [AllowAnonymous]
     [HttpPost("generate-token")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -78,6 +84,14 @@ public class ProcessPaymentController : ControllerBase
     #endregion
 
     #region Gerar Token do Cartão
+
+    /// <summary>
+    /// Gera um token para o cartão de crédito informado, necessário para realizar transações.
+    /// </summary>
+    /// <param name="card">Dados do cartão e do cliente que serão utilizados para gerar o token.</param>
+    /// <returns>Retorna o token do cartão em caso de sucesso (HTTP 201).
+    /// Em caso de falha, retorna um <see cref="ProblemDetails"/> com informações sobre o erro.</returns>
+
     [Authorize]
     [HttpPost("generate-token-card")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -253,6 +267,14 @@ public class ProcessPaymentController : ControllerBase
     // #endregion
 
     #region Realizar Transação
+
+    /// <summary>
+    /// Realiza uma transação de pagamento com cartão de crédito via Getnet.
+    /// </summary>
+    /// <param name="paymentCredit">Objeto contendo os dados da transação, como valor, cliente, e informações do cartão.</param>
+    /// <returns>Retorna um objeto com os dados da transação em caso de sucesso (HTTP 200),
+    /// ou um objeto <see cref="ProblemDetails"/> com informações sobre o erro ocorrido.</returns>
+
     [Authorize]
     [HttpPost("transact")]
     [ProducesResponseType(StatusCodes.Status200OK)]

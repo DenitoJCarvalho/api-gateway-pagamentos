@@ -1,15 +1,18 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-
 namespace Getnet.Controllers.Dtos.Common;
+
+/// <summary>
+/// Conjunto de dados referentes ao endereço.
+/// </summary>
 public class AddressDto
 {
     /// <summary>
     /// Logradouro.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1,60, ErrorMessage = "Campo deve ter entre 1 a 60 caracteres.")]
+    [Length(1, 60, ErrorMessage = "Campo deve ter entre 1 a 60 caracteres.")]
     [JsonPropertyName("street")]
     public string Street { get; set; } = string.Empty;
 
@@ -17,7 +20,7 @@ public class AddressDto
     /// Número do logradouro.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1,10, ErrorMessage = "Campo deve ter entre 1 a 10 caracteres.")]
+    [Length(1, 10, ErrorMessage = "Campo deve ter entre 1 a 10 caracteres.")]
     [JsonPropertyName("number")]
     public string Number { get; set; } = string.Empty;
 
@@ -25,14 +28,14 @@ public class AddressDto
     /// Complemento do logradouro.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1,60, ErrorMessage = "Campo deve ter entre 1 a 60 caracteres.")]
+    [Length(1, 60, ErrorMessage = "Campo deve ter entre 1 a 60 caracteres.")]
     [JsonPropertyName("complement")]
     public string Complement { get; set; } = string.Empty;
 
     /// <summary>
     /// Bairro.
     /// </summary>
-    [Length(1,40, ErrorMessage = "Campo deve ter entre 1 a 40 caracteres.")]
+    [Length(1, 40, ErrorMessage = "Campo deve ter entre 1 a 40 caracteres.")]
     [JsonPropertyName("district")]
     public string District { get; set; } = string.Empty;
 
@@ -40,7 +43,7 @@ public class AddressDto
     /// Cidade.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1,40, ErrorMessage = "Campo deve ter entre 1 a 40 caracteres.")]
+    [Length(1, 40, ErrorMessage = "Campo deve ter entre 1 a 40 caracteres.")]
     [JsonPropertyName("city")]
     public string City { get; set; } = string.Empty;
 
@@ -48,7 +51,7 @@ public class AddressDto
     /// Estado(UF).
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1,20, ErrorMessage = "Campo deve ter entre 1 a 20 caracteres.")]
+    [Length(1, 20, ErrorMessage = "Campo deve ter entre 1 a 20 caracteres.")]
     [JsonPropertyName("state")]
     public string State { get; set; } = string.Empty;
 
@@ -56,7 +59,7 @@ public class AddressDto
     /// País.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1,20, ErrorMessage = "Campo deve ter entre 1 a 20 caracteres.")]
+    [Length(1, 20, ErrorMessage = "Campo deve ter entre 1 a 20 caracteres.")]
     [JsonPropertyName("country")]
     public string Country { get; set; } = string.Empty;
 
@@ -64,7 +67,7 @@ public class AddressDto
     /// Código Postal, CEP no Brasil ou ZIP nos Estados Unidos. (sem máscara)
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1,8, ErrorMessage = "Campo deve ter entre 1 e 8 caracteres.")]
+    [Length(1, 8, ErrorMessage = "Campo deve ter entre 1 e 8 caracteres.")]
     [JsonPropertyName("postal_code")]
     public string PostalCode { get; set; } = string.Empty;
 }

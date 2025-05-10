@@ -14,7 +14,7 @@ public interface IGetnetService
     /// Obtém um token de autenticação para acessar a API da Getnet.
     /// Este token deve ser utilizado em todas as requisições subsequentes à API.
     /// </summary>
-    /// <returns>Um objeto <see cref="TokenResponse">contendo o token de acesso.</returns>
+    /// <returns>Um objeto <see cref="TokenResponse"/>contendo o token de acesso.</returns>
     Task<TokenResponse> GetTokenAsync();
 
     /// <summary>
@@ -22,7 +22,7 @@ public interface IGetnetService
     /// </summary>
     /// <param name="card">Objeto contendo os dados do cartão.</param>
     /// <param name="token">Token de autenticação da API.</param>
-    /// <returns>Um objeto <see cref="TokenCardResponse"> contendo o token do cartão.</returns>
+    /// <returns>Um objeto <see cref="TokenCardResponse"/> contendo o token do cartão.</returns>
     Task<TokenCardResponse> GetTokenCard(TokenCard card, string token);
 
     /// <summary>
@@ -30,7 +30,7 @@ public interface IGetnetService
     /// </summary>
     /// <param name="tokenFlag">Objeto contendo os dados necssários para identificar a bandeira.</param>
     /// <param name="token">Token de autenticação da API.</param>
-    /// <returns>Um objeto  <see cref="TokenFlagResponse"> contendo o token da bandeira.</returns>
+    /// <returns>Um objeto  <see cref="TokenFlagResponse" /> contendo o token da bandeira.</returns>
     Task<TokenFlagResponse> GetTokenFlag(TokenFlag tokenFlag, string token);
 
     /// <summary>
@@ -38,7 +38,7 @@ public interface IGetnetService
     /// </summary>
     /// <param name="cardCryptogram">Objeto contendo os dados necessários para gerar criptograma.</param>
     /// <param name="token">Token de autenticação da API.</param>
-    /// <returns>Um objeto <see cref="CardCryptogmaResponse"> contendo o criptograma para transação.</returns>
+    /// <returns>Um objeto <see cref="CardCryptogramResponse"/> contendo o criptograma para transação.</returns>
     Task<CardCryptogramResponse> GetCardCryptogram(CardCryptogram cardCryptogram, string token);
 
     /// <summary>
@@ -48,7 +48,7 @@ public interface IGetnetService
     /// <param name="cardVerification">Dados do cartão</param>
     /// <param name="token">Token de autenticação da API.</param>
     /// <param name="sellerId">Código de verificação do e-commerce.</param>
-    /// <returns>Um objeto <see cref="CardVerificationResponse"> contendo status, verification_id, authorization_id, transaction_id.</returns>
+    /// <returns>Um objeto <see cref="CardVerificationResponse"/> contendo status, verification_id, authorization_id, transaction_id.</returns>
     Task<CardVerificationResponse> GetCardVerification(CardVerification cardVerification, string token, string? sellerId);
 
     /// <summary>
@@ -56,7 +56,7 @@ public interface IGetnetService
     /// </summary>
     /// <param name="payment">Objeto contendo as informações da transação de crédito, como valor, número de parcelas, dados do cartão e demais configurações.</param>
     /// <param name="token">Token de autenticação da API.</param>
-    /// <returns></returns>
+    /// <returns>Um objeto <see cref="PaymentCreditResponse"/> contendo os dados da resposta da transação de crédito, como status, código de autorização, e detalhes do pagamento.</returns>
     Task<PaymentCreditResponse> Transaction(PaymentCredit payment, string token);
     
 }

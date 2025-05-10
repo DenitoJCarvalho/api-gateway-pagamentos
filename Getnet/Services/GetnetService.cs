@@ -44,7 +44,7 @@ public class GetnetService : IGetnetService
         "application/json"
     ];
 
-    private TokenResponse _cachedToken;
+    private TokenResponse _cachedToken { get; set; } = new TokenResponse { };
     private DateTime _tokenExpiration;
     private readonly SemaphoreSlim _semaphore = new(1,1);
 

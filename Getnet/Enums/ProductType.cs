@@ -4,6 +4,9 @@ using System.Runtime.Serialization;
 
 namespace Getnet.Enums;
 
+/// <summary>
+/// Identificador do tipo de produto vendido.
+/// </summary>
 [JsonConverter(typeof(StringEnumConverter))]
 public enum ProductType
 {
