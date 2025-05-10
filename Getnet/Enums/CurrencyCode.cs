@@ -10,5 +10,5 @@ namespace Getnet.Enums;
 public enum CurrencyCode
 {
     [EnumMember(Value = "BRL")]
-    BRL = 986
+    BRL 
 }

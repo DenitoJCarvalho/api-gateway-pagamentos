@@ -14,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 //Dependências
 #region Dependências
 builder.Services.AddScoped<IGetnetService, GetnetService>();
+
+builder.Services.AddHttpContextAccessor();
 #endregion
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -70,12 +72,14 @@ builder.Services.AddHttpClient<IGetnetService, GetnetService>((serviceProvider, 
 
 #endregion
 
+//Controller
+#region Configuração das controllers
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     {
         options.SerializerSettings.Converters.Add(new StringEnumConverter());
     });
-
+#endregion
 
 //Configuração do Swagger
 #region Swagger

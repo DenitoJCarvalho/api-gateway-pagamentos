@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
-using Getnet.Services;
 using Getnet.Controllers.Dtos;
 using Getnet.Entities.Request;
 using Getnet.Entities.Commom;
 using Getnet.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Getnet.Controllers.ProcessPayment;
 
@@ -17,16 +16,20 @@ public class ProcessPaymentController : ControllerBase
     #region Propriedades
     private readonly ILogger<ProcessPaymentController> _logger;
     private readonly IGetnetService _getnetService;
+
+    private readonly IHttpContextAccessor _contextAccessor;
     #endregion
 
     #region Construtores
     public ProcessPaymentController(
         ILogger<ProcessPaymentController> logger,
-        IGetnetService getnetService
+        IGetnetService getnetService,
+        IHttpContextAccessor contextAccessor
     )
     {
         _logger = logger;
         _getnetService = getnetService;
+        _contextAccessor = contextAccessor;
     }
     #endregion
 
@@ -321,6 +324,12 @@ public class ProcessPaymentController : ControllerBase
                         ExpirationYear = paymentCredit.Credit.Card.ExpirationYear,
                         SecurityCode = paymentCredit.Credit.Card.SecurityCode
                     }
+                },
+                Device = new Device
+                {
+                    IpAddress = _contextAccessor.HttpContext?.Request.Headers.ContainsKey("X-Forwarded-For") == true
+                        ? _contextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault() ?? string.Empty
+                        : _contextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? string.Empty
                 }
             };
 
