@@ -1,6 +1,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Getnet.Enums;
 
 namespace Getnet.Entities.Dto;
 
@@ -22,9 +23,8 @@ public class CardVerificationDto
     /// Bandeira do cartão. Preenchido automaticamente pela API caso não seja informado.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1, 50, ErrorMessage = "O campo deve ter entre 1 e 50 caracteres.")]
     [JsonPropertyName("brand")]
-    public string Brand { get; set; } = string.Empty;
+    public CardBrand Brand { get; set; } 
 
     /// <summary>
     /// Nome do comprador impresso no cartão.

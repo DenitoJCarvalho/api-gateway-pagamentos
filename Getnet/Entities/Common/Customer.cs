@@ -1,6 +1,7 @@
 
 
 using System.Text.Json.Serialization;
+using Getnet.Enums;
 
 namespace Getnet.Entities.Commom;
 
@@ -43,7 +44,7 @@ public class Customer
     /// Tipo do documento de identificação do comprador.
     /// </summary>
     [JsonPropertyName("document_type")]
-    public string DocumentType { get; set; } = string.Empty;
+    public DocumentType DocumentType { get; set; } 
 
     /// <summary>
     /// Número do documento do comprador sem pontuação.

@@ -1,13 +1,13 @@
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Options;
-
-using Getnet.Infrastrucutre.Configurations.Getnet;
-using Getnet.Services.Interfaces;
-using Getnet.Services;
 using Newtonsoft.Json.Converters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+
+using Getnet.Infrastrucutre.Configurations.Getnet;
+using Getnet.Services.Interfaces;
+using Getnet.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
