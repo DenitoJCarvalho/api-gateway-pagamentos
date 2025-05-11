@@ -2,6 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Getnet.Enums;
 
 namespace Getnet.Controllers.Dtos.Common;
 
@@ -57,7 +58,7 @@ public class CustomerDto
     [Required(ErrorMessage = "Campo obrigatório.")]
     [Length(1, 26, ErrorMessage = "Campo deve ter entre 1 e 26 caracteres.")]
     [JsonPropertyName("document_type")]
-    public string DocumentType { get; set; } = string.Empty;
+    public DocumentType DocumentType { get; set; } 
 
     /// <summary>
     /// Número do documento do comprador sem pontuação.

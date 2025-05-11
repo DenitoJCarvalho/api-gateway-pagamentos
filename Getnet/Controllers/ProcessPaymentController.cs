@@ -305,7 +305,12 @@ public class ProcessPaymentController : ControllerBase
                     CustomerId = paymentCredit.Customer.CustomerId,
                     FirstName = paymentCredit.Customer.FirstName,
                     LastName = paymentCredit.Customer.LastName,
-                    Email = paymentCredit.Customer.Email
+                    Name = paymentCredit.Customer.Name,
+                    Email = paymentCredit.Customer.Email,
+                    DocumentType = paymentCredit.Customer.DocumentType,
+                    DocumentNumber = paymentCredit.Customer.DocumentNumber,
+                    PhoneNumber = paymentCredit.Customer.PhoneNumber,
+
                 },
                 Credit = new Credit
                 {
