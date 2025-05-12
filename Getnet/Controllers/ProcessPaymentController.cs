@@ -102,11 +102,16 @@ public class ProcessPaymentController : ControllerBase
     {
         try
         {
-            var token = await _getnetService.GetTokenAsync();
-
-            if (string.IsNullOrWhiteSpace(token?.AccessToken))
+            if (!Request.Headers.TryGetValue("Authorization", out var tokenHeader))
             {
-                _logger.LogError("Token de atutenticação não retornado ou inválido.");
+                return Unauthorized($"Token não fornecido no cabeçalho Authorization.");    
+            }
+
+            string accessToken = tokenHeader.ToString();
+
+            if (string.IsNullOrWhiteSpace(accessToken))
+            {
+                _logger.LogError("Token de autenticação não retornado ou inválido.");
 
                 return StatusCode(StatusCodes.Status502BadGateway, "Erro ao obter token de autenticação.");
             }
@@ -118,7 +123,7 @@ public class ProcessPaymentController : ControllerBase
                 SellerId = card.SellerId
             };
 
-            var tokenCard = await _getnetService.GetTokenCard(cardRequest, token.AccessToken);
+            var tokenCard = await _getnetService.GetTokenCard(cardRequest, accessToken);
 
             return StatusCode(StatusCodes.Status201Created, tokenCard);
         }
@@ -289,7 +294,12 @@ public class ProcessPaymentController : ControllerBase
     {
         try
         {
-            var token = await _getnetService.GetTokenAsync();
+            if (!Request.Headers.TryGetValue("Authorization", out var tokenHeader))
+            {
+                return Unauthorized($"Token não fornecido no cabeçalho Authorization.");    
+            }
+
+            string accessToken = tokenHeader.ToString();
 
             PaymentCredit payment = new PaymentCredit
             {
@@ -338,7 +348,7 @@ public class ProcessPaymentController : ControllerBase
                 }
             };
 
-            var paymentResponse = await _getnetService.Transaction(payment, token.AccessToken);
+            var paymentResponse = await _getnetService.Transaction(payment, accessToken);
 
             return StatusCode(StatusCodes.Status200OK, paymentResponse);
 
@@ -347,7 +357,7 @@ public class ProcessPaymentController : ControllerBase
         {
             var problem = new ProblemDetails
             {
-                Title = "Erro ao obter criptograma do cartão",
+                Title = "Erro ao realizar transaçao de pgamento.",
                 Detail = ex.Message,
                 Status = StatusCodes.Status400BadRequest,
                 Instance = HttpContext.Request.Path,
@@ -356,7 +366,7 @@ public class ProcessPaymentController : ControllerBase
             problem.Extensions["errorCode"] = "PAYMENT_CREDIT_ERROR";
             problem.Extensions["timestamp"] = DateTime.UtcNow;
 
-            _logger.LogError($"Erro ao obter criptograma do cartão: {ex.Message}");
+            _logger.LogError($"Erro ao realizar transação de pagamento: {ex.Message}");
 
             return BadRequest(problem);
         }
@@ -367,7 +377,7 @@ public class ProcessPaymentController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao obter criptograma do cartão");
+            _logger.LogError(ex, "Erro ao realizar transação de pagamento.");
             return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
         }
     }
