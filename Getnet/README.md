@@ -58,7 +58,7 @@ dotnet restore
 
 ## ✅ Testes
 
-Você pode testar os endpoints da seguintes formas:
+Você pode testar os endpoints das seguintes formas:
 
 - **Swagger UI**: A interface de testes do swagger será aberta automaticamente ao iniciar a API. Ela permite enviar requisições e visualizar respostas diretamente no navegador.
 
