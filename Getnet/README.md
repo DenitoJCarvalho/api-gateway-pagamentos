@@ -1,6 +1,6 @@
 # API Getnet
 
-Esta API tem por objetivo atender à forma de pagamento das **plataformas BMC**.
+Esta API tem por objetivo implementar os meios de pagamento da **Getnet**.
 
 Abaixo está a documentação necessária para configuração em ambiente de produção.
 
