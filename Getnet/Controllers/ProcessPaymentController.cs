@@ -328,8 +328,6 @@ public class ProcessPaymentController : ControllerBase
                     SaveCardData = paymentCredit.Credit.SaveCardData,
                     TransactionType = paymentCredit.Credit.TransactionType,
                     NumberInstallments = paymentCredit.Credit.NumberInstallments,
-                    SoftDescriptor = paymentCredit.Credit.SoftDescriptor,
-                    DynamicMcc = paymentCredit.Credit.DynamicMcc,
 
                     Card = new CardVerification
                     {

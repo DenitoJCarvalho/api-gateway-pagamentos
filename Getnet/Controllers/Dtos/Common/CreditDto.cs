@@ -14,21 +14,21 @@ public class CreditDto
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
     [JsonPropertyName("delayed")]
-    public bool Delayed { get; set; }
+    public bool Delayed { get; set; } = false;
 
     /// <summary>
     /// Indicativo se a transação é uma pré autorização de crédito.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
     [JsonPropertyName("pre_authorization")]
-    public bool PreAuthorization { get; set; }
+    public bool PreAuthorization { get; set; } = false;
 
     /// <summary>
     /// Identifica se o cartão deve ser salvo para futuras compras.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
     [JsonPropertyName("save_card_data")]
-    public bool SaveCardData { get; set; }
+    public bool SaveCardData { get; set; } = false;
 
     /// <summary>
     /// Tipo de transação.
