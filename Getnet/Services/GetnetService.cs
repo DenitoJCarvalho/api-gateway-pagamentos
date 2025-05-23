@@ -59,6 +59,7 @@ public class GetnetService : IGetnetService
     )
     {
         _httpClient = httpClient;
+        _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
         _logger = logger;
         _settings = options.Value;
     }
@@ -165,6 +166,7 @@ public class GetnetService : IGetnetService
         }
 
         var content = await response.Content.ReadAsStringAsync();
+        _logger.LogInformation($"Conteúdo bruto retornada da API: {content}");
 
         var tokenCardResponse = JsonSerializer.Deserialize<TokenCardResponse>(content, new JsonSerializerOptions
         {

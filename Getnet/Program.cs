@@ -1,9 +1,8 @@
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Converters;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using System.Net;
 
 using Getnet.Infrastrucutre.Configurations.Getnet;
 using Getnet.Services.Interfaces;
@@ -16,6 +15,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IGetnetService, GetnetService>();
 
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddHttpClient<IGetnetService, GetnetService>()
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+    });
 #endregion
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -55,7 +60,7 @@ builder.Services.Configure<GetnetSettings>(
     builder.Configuration.GetSection("Getnet")
 );
 
-var getnetSettings = builder.Configuration.GetSection("GetNet").Get<GetnetSettings>();
+var getnetSettings = builder.Configuration.GetSection("Getnet").Get<GetnetSettings>();
 
 //Configuração do Httpclient para o GetnetService
 builder.Services.AddHttpClient<IGetnetService, GetnetService>((serviceProvider, client) =>
@@ -92,13 +97,13 @@ builder.Services.AddSwaggerGen(c =>
 
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Getnet API",
+        Title = "API Gateway de Pagamentos",
         Version = "v1",
-        Description = "API de processos de pagamento para as plataformas da Pesados Online"
+        Description = "API de processos de pagamento"
     });
 
     //Define o esquema OAuth2
-    c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = @"Insira o token JWT no campo abaixo. Exemplo Bearer abc123",
         Name = "Authorization",
@@ -116,26 +121,11 @@ builder.Services.AddSwaggerGen(c =>
                     Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
                 },
-                Scheme = "oauth2",
-                Name = "Bearer",
-                In = ParameterLocation.Header
             },
             new List<string>()
         }
-    });    
+    });
 
-});
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-    };
 });
 
 #endregion

@@ -1,4 +1,6 @@
 
+using System.Text.Json.Serialization;
+
 namespace Getnet.Entities.Response;
 
 /// <summary>
@@ -7,5 +9,6 @@ namespace Getnet.Entities.Response;
 
 public class TokenCardResponse
 {
+  [JsonPropertyName("number_token")]
   public string NumberToken { get; set; } = string.Empty;
 }

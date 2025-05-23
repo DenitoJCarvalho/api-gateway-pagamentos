@@ -15,7 +15,7 @@ public class TokenCardDto
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório")]
     [Length(13, 19, ErrorMessage = "Número do cartão deve ter entre 13 e 19 dígitos")]
-    [JsonPropertyName("customer_id")]
+    [JsonPropertyName("card_number")]
     public string CardNumber { get; set; } = string.Empty;
 
      /// <summary>
@@ -30,9 +30,7 @@ public class TokenCardDto
     /// Código de indentificação do e-commerce. Obrigatório quando o cliente for tratado como Plataforma.
     /// Identificação do vendedor na Getnet.
     /// </summary>
-    [Required(ErrorMessage = "Campo obrigatório")]
-    [Length(36,36, ErrorMessage = "Campo deve ter 36 caracteres")]
     [JsonPropertyName("seller_id")]
-    public string SellerId { get; set; } = string.Empty;
+    public string? SellerId { get; set; } 
 
 }

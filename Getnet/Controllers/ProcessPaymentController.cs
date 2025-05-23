@@ -5,6 +5,8 @@ using Getnet.Controllers.Dtos;
 using Getnet.Entities.Request;
 using Getnet.Entities.Commom;
 using Getnet.Services.Interfaces;
+using Getnet.Infrastrucutre.Configurations.Getnet;
+using Microsoft.Extensions.Options;
 
 namespace Getnet.Controllers;
 
@@ -18,18 +20,22 @@ public class ProcessPaymentController : ControllerBase
     private readonly IGetnetService _getnetService;
 
     private readonly IHttpContextAccessor _contextAccessor;
+
+    private readonly GetnetSettings _settings;
     #endregion
 
     #region Construtores
     public ProcessPaymentController(
         ILogger<ProcessPaymentController> logger,
         IGetnetService getnetService,
-        IHttpContextAccessor contextAccessor
+        IHttpContextAccessor contextAccessor,
+         IOptions<GetnetSettings> options
     )
     {
         _logger = logger;
         _getnetService = getnetService;
         _contextAccessor = contextAccessor;
+        _settings = options.Value;
     }
     #endregion
 
@@ -94,20 +100,22 @@ public class ProcessPaymentController : ControllerBase
     /// <param name="card">Dados do cartão e do cliente que serão utilizados para gerar o token.</param>
     /// <returns>Retorna o token do cartão em caso de sucesso (HTTP 201).
     /// Em caso de falha, retorna um <see cref="ProblemDetails"/> com informações sobre o erro.</returns>
-
-    [Authorize]
     [HttpPost("generate-token-card")]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json")]
     public async Task<IActionResult> GetTokenCard([FromBody] TokenCardDto card)
     {
         try
-        {
+        { 
             if (!Request.Headers.TryGetValue("Authorization", out var tokenHeader))
             {
-                return Unauthorized($"Token não fornecido no cabeçalho Authorization.");    
+                return Unauthorized($"Token não fornecido no cabeçalho Authorization.");
             }
 
-            string accessToken = tokenHeader.ToString();
+            string accessToken = tokenHeader.ToString().Replace("Bearer ", "", StringComparison.OrdinalIgnoreCase);
 
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -116,11 +124,13 @@ public class ProcessPaymentController : ControllerBase
                 return StatusCode(StatusCodes.Status502BadGateway, "Erro ao obter token de autenticação.");
             }
 
+            card.SellerId = _settings.SellerId;
+
             TokenCard cardRequest = new TokenCard
             {
                 CardNumber = card.CardNumber,
                 CustomerId = card.CustomerId,
-                SellerId = card.SellerId
+                SellerId = card.SellerId,
             };
 
             var tokenCard = await _getnetService.GetTokenCard(cardRequest, accessToken);
@@ -282,8 +292,6 @@ public class ProcessPaymentController : ControllerBase
     /// <param name="paymentCredit">Objeto contendo os dados da transação, como valor, cliente, e informações do cartão.</param>
     /// <returns>Retorna um objeto com os dados da transação em caso de sucesso (HTTP 200),
     /// ou um objeto <see cref="ProblemDetails"/> com informações sobre o erro ocorrido.</returns>
-
-    [Authorize]
     [HttpPost("transact")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
