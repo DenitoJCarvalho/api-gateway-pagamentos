@@ -1,6 +1,6 @@
 # API Getnet
 
-Esta API tem por objetivo atender à forma de pagamento das **plataformas BMC**.
+Esta API tem por objetivo implementar os meios de pagamento da **Getnet**.
 
 Abaixo está a documentação necessária para configuração em ambiente de produção.
 
@@ -58,7 +58,7 @@ dotnet restore
 
 ## ✅ Testes
 
-Você pode testar os endpoints da seguintes formas:
+Você pode testar os endpoints das seguintes formas:
 
 - **Swagger UI**: A interface de testes do swagger será aberta automaticamente ao iniciar a API. Ela permite enviar requisições e visualizar respostas diretamente no navegador.
 
