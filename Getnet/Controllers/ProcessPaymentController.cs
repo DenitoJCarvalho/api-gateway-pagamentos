@@ -6,7 +6,7 @@ using Getnet.Entities.Request;
 using Getnet.Entities.Commom;
 using Getnet.Services.Interfaces;
 
-namespace Getnet.Controllers.ProcessPayment;
+namespace Getnet.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -47,7 +47,7 @@ public class ProcessPaymentController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Produces("application/x-www-form-urlencoded")]
+    [Produces("application/json")]
     public async Task<IActionResult> GetToken()
     {
         try

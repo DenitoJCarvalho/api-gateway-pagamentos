@@ -107,7 +107,6 @@ public class GetnetService : IGetnetService
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, _authTokenUrl[0]);
             request.Content = new StringContent($"grant_type={token.GrantType}", Encoding.UTF8, _contentType[0]);
             request.Headers.Authorization = new AuthenticationHeaderValue("Basic", base64ClientCredentials);
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var response = await _httpClient.SendAsync(request);
 
