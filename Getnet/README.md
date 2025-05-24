@@ -6,7 +6,7 @@ Abaixo está a documentação necessária para configuração em ambiente de pro
 
 ---
 
-## Arquitetura
+## 🏗️Arquitetura
 ![](Docs/Architecture/arquitetura_da_API.png)
 
 
