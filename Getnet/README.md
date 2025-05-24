@@ -38,6 +38,23 @@ A definição do ambiente ativo é feita no arquivo `launchSettings.json`, atrav
 
 ---
 
+## 🔐 Configurações obrigatórias (`appsettings.json` e `appsettings.Development.json`)
+
+Nos arquivos de configuração, é necessário incluir a seção `GetNet` com os dados de autenticação e identificação da aplicação junto à GetNet:
+
+```json
+"GetNet": {
+  "ClientId": "SeuClientIdAqui",
+  "ClientSecret": "SeuClientSecretAqui",
+  "HostProducao": "api.getnet.com.br",
+  "SellerId": "SeuSellerIdAqui",
+  "GatewayId": "SeuGatewayIdAqui"
+}
+
+```
+
+---
+
 ## 🛠️ Instalação
 
 Para restaurar os pacotes e dependências do projeto, execute o comando abaixo no terminal:
