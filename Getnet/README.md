@@ -4,6 +4,14 @@ Esta API tem por objetivo implementar os meios de pagamento da **Getnet**.
 
 Abaixo está a documentação necessária para configuração em ambiente de produção.
 
+---
+
+## Arquitetura
+![](Docs/Architecture/arquitetura_da_API.png)
+
+
+---
+
 > ⚠️**Atenção*: Todos os dados sensíveis serão inseridos através de **variáveis de ambiente**, seguindo boas práticas de segurança.
 
 ---
