@@ -4,7 +4,7 @@ using System.Text;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
-using Getnet.Infrastrucutre.Configurations.Getnet;
+using Getnet.Infrastructure.Configurations.Getnet;
 using Getnet.Services.Interfaces;
 using Getnet.Exceptions;
 using Getnet.Entities.Request;

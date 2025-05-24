@@ -4,7 +4,7 @@ using Newtonsoft.Json.Converters;
 using System.Reflection;
 using System.Net;
 
-using Getnet.Infrastrucutre.Configurations.Getnet;
+using Getnet.Infrastructure.Configurations.Getnet;
 using Getnet.Services.Interfaces;
 using Getnet.Services;
 

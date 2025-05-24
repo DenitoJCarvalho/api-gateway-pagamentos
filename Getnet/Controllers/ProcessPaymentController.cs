@@ -5,7 +5,7 @@ using Getnet.Controllers.Dtos;
 using Getnet.Entities.Request;
 using Getnet.Entities.Commom;
 using Getnet.Services.Interfaces;
-using Getnet.Infrastrucutre.Configurations.Getnet;
+using Getnet.Infrastructure.Configurations.Getnet;
 using Microsoft.Extensions.Options;
 
 namespace Getnet.Controllers;

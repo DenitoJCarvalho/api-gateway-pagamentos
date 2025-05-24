@@ -1,7 +1,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace Getnet.Infrastrucutre.Configurations.Getnet;
+namespace Getnet.Infrastructure.Configurations.Getnet;
 
 public class GetnetSettings
 {
