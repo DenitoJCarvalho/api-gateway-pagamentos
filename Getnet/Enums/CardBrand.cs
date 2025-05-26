@@ -1,12 +1,14 @@
 
-
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+using Getnet.Infrastructure.Configurations.Serialization;
 
 namespace Getnet.Enums;
 
 /// <summary>
 /// Bandeiras de cartão aceito pela Getnet.
 /// </summary>
+[JsonConverter(typeof(JsonEnumMemberConverter<CardBrand>))]
 public enum CardBrand
 {
     [EnumMember(Value = "Mastercard")]
@@ -19,7 +21,7 @@ public enum CardBrand
     Amex,
 
     [EnumMember(Value = "Elo")]
-    Elo, 
+    Elo,
 
     [EnumMember(Value = "Hipercard")]
     Hipercard

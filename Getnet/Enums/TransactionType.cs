@@ -1,12 +1,13 @@
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using Getnet.Infrastructure.Configurations.Serialization;
 
 namespace Getnet.Enums;
 
 /// <summary>
 /// Tipo de transação.
 /// </summary>
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonEnumMemberConverter<TransactionType>))]
 public enum TransactionType
 {
     /// <summary>

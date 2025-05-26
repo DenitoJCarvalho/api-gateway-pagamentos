@@ -22,7 +22,6 @@ public class CardVerificationDto
     /// Valores possíveis: "Mastercard", "Visa", "Amex", "Elo", "Hipercard".
     /// Bandeira do cartão. Preenchido automaticamente pela API caso não seja informado.
     /// </summary>
-    [Required(ErrorMessage = "Campo obrigatório.")]
     [JsonPropertyName("brand")]
     public CardBrand Brand { get; set; } 
 
@@ -61,7 +60,6 @@ public class CardVerificationDto
     /// <summary>
     /// Merchant Payment Gateway ID.
     /// </summary>
-    [Required(ErrorMessage = "Campo obrigatório.")]
     [JsonPropertyName("gateway_id")]
-    public string GatewayId { get; set; } = string.Empty;
+    public string? GatewayId { get; set; }
 }

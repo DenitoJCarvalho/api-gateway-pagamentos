@@ -1,12 +1,13 @@
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Converters;
+using Microsoft.AspNetCore.Http.Json;
 using System.Reflection;
 using System.Net;
 
 using Getnet.Infrastructure.Configurations.Getnet;
 using Getnet.Services.Interfaces;
 using Getnet.Services;
+using Getnet.Infrastructure.Configurations.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,9 +81,9 @@ builder.Services.AddHttpClient<IGetnetService, GetnetService>((serviceProvider, 
 //Controller
 #region Configuração das controllers
 builder.Services.AddControllers()
-    .AddNewtonsoftJson(options =>
+    .AddJsonOptions(options =>
     {
-        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+        options.JsonSerializerOptions.Converters.Add(new JsonEnumMemberConverterFactory());
     });
 #endregion
 

@@ -1,12 +1,13 @@
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using Getnet.Infrastructure.Configurations.Serialization;
 
 namespace Getnet.Enums;
 
 /// <summary>
 /// Tipos de subcomércio.
 /// </summary>
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonEnumMemberConverter<ForeignType>))]
 public enum ForeignType
 {
     /// <summary>

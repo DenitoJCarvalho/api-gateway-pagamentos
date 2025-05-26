@@ -1,12 +1,13 @@
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using Getnet.Infrastructure.Configurations.Serialization;
 
 namespace Getnet.Enums;
 
 /// <summary>
 /// Tipo de criptograma utilizado pelo TSP (Token Service Provider).
 /// </summary>
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonEnumMemberConverter<TokenizationType>))]
 public enum TokenizationType
 {
     /// <summary>

@@ -1,5 +1,6 @@
 
 using System.Text.Json.Serialization;
+using Getnet.Enums;
 
 namespace Getnet.Entities.Commom;
 
@@ -16,7 +17,7 @@ public class CardVerification
     /// Bandeira do cartão. Preenchido automaticamente pela API caso não seja informado.
     /// </summary>
     [JsonPropertyName("brand")]
-    public string Brand { get; set; } = string.Empty;
+    public CardBrand Brand { get; set; }
 
     /// <summary>
     /// Nome do comprador impresso no cartão.
@@ -46,5 +47,5 @@ public class CardVerification
     /// Merchant Payment Gateway ID.
     /// </summary>
     [JsonPropertyName("gateway_id")]
-    public string GatewayId { get; set; } = string.Empty;
+    public string? GatewayId { get; set; }
 }

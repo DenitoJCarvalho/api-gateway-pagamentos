@@ -9,31 +9,10 @@ namespace Getnet.Controllers.Dtos.Common;
 
 public class CreditDto
 {
-    /// <summary>
-    /// Identifica se o crédito será feito com confirmação tardia.
-    /// </summary>
-    [Required(ErrorMessage = "Campo obrigatório.")]
-    [JsonPropertyName("delayed")]
-    public bool Delayed { get; set; } = false;
-
-    /// <summary>
-    /// Indicativo se a transação é uma pré autorização de crédito.
-    /// </summary>
-    [Required(ErrorMessage = "Campo obrigatório.")]
-    [JsonPropertyName("pre_authorization")]
-    public bool PreAuthorization { get; set; } = false;
-
-    /// <summary>
-    /// Identifica se o cartão deve ser salvo para futuras compras.
-    /// </summary>
-    [Required(ErrorMessage = "Campo obrigatório.")]
-    [JsonPropertyName("save_card_data")]
-    public bool SaveCardData { get; set; } = false;
 
     /// <summary>
     /// Tipo de transação.
     /// </summary>
-    [Required(ErrorMessage = "Campo obrigatório.")]
     [JsonPropertyName("transaction_type")]
     public TransactionType TransactionType { get; set; }
 
@@ -70,7 +49,7 @@ public class CreditDto
     public CardVerificationDto Card { get; set; } = new CardVerificationDto { };
 
     [JsonPropertyName("tokenization")]
-    public TokenizationDto? Tokenization { get; set; } = new TokenizationDto { };
+    public TokenizationDto Tokenization { get; set; } = new TokenizationDto { };
 
     /// <summary>
     /// Tipo de COF (Credential On File)

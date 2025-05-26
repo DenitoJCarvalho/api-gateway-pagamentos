@@ -7,6 +7,7 @@ using Getnet.Entities.Commom;
 using Getnet.Services.Interfaces;
 using Getnet.Infrastructure.Configurations.Getnet;
 using Microsoft.Extensions.Options;
+using Getnet.Enums;
 
 namespace Getnet.Controllers;
 
@@ -124,13 +125,12 @@ public class ProcessPaymentController : ControllerBase
                 return StatusCode(StatusCodes.Status502BadGateway, "Erro ao obter token de autenticação.");
             }
 
-            card.SellerId = _settings.SellerId;
 
             TokenCard cardRequest = new TokenCard
             {
                 CardNumber = card.CardNumber,
                 CustomerId = card.CustomerId,
-                SellerId = card.SellerId,
+                SellerId = _settings.SellerId,
             };
 
             var tokenCard = await _getnetService.GetTokenCard(cardRequest, accessToken);
@@ -307,13 +307,13 @@ public class ProcessPaymentController : ControllerBase
                 return Unauthorized($"Token não fornecido no cabeçalho Authorization.");    
             }
 
-            string accessToken = tokenHeader.ToString();
+            string accessToken = tokenHeader.ToString(); 
 
             PaymentCredit payment = new PaymentCredit
             {
-                SellerId = paymentCredit.SellerId,
+                SellerId = _settings.SellerId,
                 Amount = paymentCredit.Amount,
-                Currency = paymentCredit.Currency,
+                Currency = CurrencyCode.BRL,
                 Order = new Order
                 {
                     OrderId = paymentCredit.Order.OrderId
@@ -328,14 +328,33 @@ public class ProcessPaymentController : ControllerBase
                     DocumentType = paymentCredit.Customer.DocumentType,
                     DocumentNumber = paymentCredit.Customer.DocumentNumber,
                     PhoneNumber = paymentCredit.Customer.PhoneNumber,
-
+                    BillingAddress = new Address
+                    {
+                        Street = paymentCredit.Customer.BillingAddress.Street,
+                        Number = paymentCredit.Customer.BillingAddress.Number,
+                        Complement = paymentCredit.Customer.BillingAddress.Complement,
+                        District = paymentCredit.Customer.BillingAddress.District,
+                        City = paymentCredit.Customer.BillingAddress.City,
+                        State = paymentCredit.Customer.BillingAddress.State,
+                        Country = paymentCredit.Customer.BillingAddress.Country,
+                        PostalCode = paymentCredit.Customer.BillingAddress.PostalCode
+                    }
                 },
                 Credit = new Credit
                 {
-                    Delayed = paymentCredit.Credit.Delayed,
-                    SaveCardData = paymentCredit.Credit.SaveCardData,
+                    Delayed = false,
+                    PreAuthorization = false,
+                    SaveCardData = false,
                     TransactionType = paymentCredit.Credit.TransactionType,
                     NumberInstallments = paymentCredit.Credit.NumberInstallments,
+                    GatewayId = paymentCredit.Credit.GatewayId,
+                    TransactionId = paymentCredit.Credit.TransactionId,
+                    Tokenization = new Tokenization
+                    {
+                        Type = paymentCredit.Credit.Tokenization.Type,
+                        Eci = paymentCredit.Credit.Tokenization.Eci,
+                        Cryptogram = paymentCredit.Credit.Tokenization.Cryptogram,
+                    },
 
                     Card = new CardVerification
                     {
@@ -343,17 +362,13 @@ public class ProcessPaymentController : ControllerBase
                         CardHolderName = paymentCredit.Credit.Card.CardHolderName,
                         ExpirationMonth = paymentCredit.Credit.Card.ExpirationMonth,
                         ExpirationYear = paymentCredit.Credit.Card.ExpirationYear,
-                        SecurityCode = paymentCredit.Credit.Card.SecurityCode
+                        SecurityCode = paymentCredit.Credit.Card.SecurityCode,
+                        Brand = paymentCredit.Credit.Card.Brand,
                     }
-                },
-                Device = new Device
-                {
-                    IpAddress = _contextAccessor.HttpContext?.Request.Headers.ContainsKey("X-Forwarded-For") == true
-                        ? _contextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault() ?? string.Empty
-                        : _contextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? string.Empty
                 }
             };
 
+            _logger.LogInformation($"Payload enviado: {payment}");
             var paymentResponse = await _getnetService.Transaction(payment, accessToken);
 
             return StatusCode(StatusCodes.Status200OK, paymentResponse);

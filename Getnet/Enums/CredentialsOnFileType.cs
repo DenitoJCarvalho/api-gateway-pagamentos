@@ -1,10 +1,13 @@
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+using Getnet.Infrastructure.Configurations.Serialization;
 
 namespace Getnet.Enums;
 
 /// <summary>
 /// Tipo de transação realizada com credenciais armazenadas.
 /// </summary>
+[JsonConverter(typeof(JsonEnumMemberConverter<CredentialsOnFileType>))]
 public enum CredentialsOnFileType
 {
     /// <summary>

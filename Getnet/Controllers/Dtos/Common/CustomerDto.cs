@@ -40,7 +40,7 @@ public class CustomerDto
     /// Nome completo do comprador.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1, 100, ErrorMessage = "CAmpo deve ter entre 1 e 100 caracteres.")]
+    [Length(1, 100, ErrorMessage = "Campo deve ter entre 1 e 100 caracteres.")]
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
 
@@ -55,8 +55,6 @@ public class CustomerDto
     /// <summary>
     /// Tipo do documento de identificação do comprador.
     /// </summary>
-    [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(1, 26, ErrorMessage = "Campo deve ter entre 1 e 26 caracteres.")]
     [JsonPropertyName("document_type")]
     public DocumentType DocumentType { get; set; } 
 

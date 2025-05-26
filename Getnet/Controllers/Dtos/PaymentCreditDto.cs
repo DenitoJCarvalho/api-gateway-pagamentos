@@ -10,26 +10,11 @@ namespace Getnet.Controllers.Dtos;
 public class PaymentCreditDto
 {
     /// <summary>
-    /// Código de indentificação do e-commerce.
-    /// </summary>
-    [Required(ErrorMessage = "Campo obrigatório.")]
-    [Length(36, 36, ErrorMessage = "Campo deve ter 36 caracteres.")]
-    [JsonPropertyName("seller_id")]
-    public string SellerId { get; set; } = string.Empty;
-
-    /// <summary>
     /// Valor da compra em centavos.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]
     [JsonPropertyName("amount")]
     public int Amount { get; set; }
-
-    /// <summary>
-    /// Identificação da moeda.
-    /// </summary>
-    [Length(3, 3, ErrorMessage = "Campo deve ter 3 caracteres.")]
-    [JsonPropertyName("currency")]
-    public CurrencyCode Currency { get; set; } = CurrencyCode.BRL;
 
     /// <summary>
     /// Conjunto de dados para identificação da compra.

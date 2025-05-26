@@ -1,13 +1,14 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+using Getnet.Infrastructure.Configurations.Serialization;
 
 namespace Getnet.Enums;
 
 /// <summary>
 /// Identificador do tipo de produto vendido.
 /// </summary>
-[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(JsonEnumMemberConverter<ProductType>))]
 public enum ProductType
 {
     /// <summary>
