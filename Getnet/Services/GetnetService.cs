@@ -24,10 +24,10 @@ public class GetnetService : IGetnetService
         O fluxo mínimo para uma transação de crédito na Getnet
         gerar token - /auth/oauth/v2/token
         gerar token do Cartão - /v1/tokens/card
+        gerar Criptograma - /v1/tokenization/crypt
         realizar transação - /v1/payments/credit 
 
         /v1/tokenization/token - Usado apenas em tokenização via TSP(Apple Apy, Google Pay, etc)
-        /v1/tokenization/crypt - Geração de criptograma (TSP)
         /v1/cards/verification - Verifica validade do cartão - não é exigido antes de uma transação.
     */
     private readonly string[] _authTokenUrl = [
@@ -46,7 +46,7 @@ public class GetnetService : IGetnetService
 
     private TokenResponse _cachedToken { get; set; } = new TokenResponse { };
     private DateTime _tokenExpiration;
-    private readonly SemaphoreSlim _semaphore = new(1,1);
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
 
 
     #endregion
@@ -216,6 +216,9 @@ public class GetnetService : IGetnetService
 
         if (!response.IsSuccessStatusCode)
         {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogError($"Erro ao realizar transação: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
+
             throw new GetnetApiExceptions(
                 $"Erro ao obter criptograma do cartão: {response.StatusCode} - {response.ReasonPhrase}",
                 (int)response.StatusCode
@@ -275,6 +278,7 @@ public class GetnetService : IGetnetService
         {
             var errorContent = await response.Content.ReadAsStringAsync();
             _logger.LogError($"Erro ao realizar transação: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
+
             throw new GetnetApiExceptions(
                 $"Erro ao realizar transação: {response.StatusCode} - {response.ReasonPhrase}",
                 (int)response.StatusCode
@@ -293,4 +297,33 @@ public class GetnetService : IGetnetService
     }
     #endregion
 
+    #region Disponibilizar SellerID
+    
+    public SellerResponse GetSellerId()
+    {
+        try
+        {
+            var seller = new Seller
+            {
+                SellerId = _settings.SellerId
+            };
+
+            if (string.IsNullOrEmpty(seller.SellerId))
+            {
+                _logger.LogError("SellerId não configurado.");
+                throw new GetnetApiExceptions("SellerId não configurado.", 400);
+            }
+
+            return new SellerResponse
+            {
+                SellerId = seller.SellerId
+             };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao obter SellerId");
+            throw new GetnetApiExceptions("Erro ao obter SellerId", 500);
+        }
+    }
+    #endregion
 }

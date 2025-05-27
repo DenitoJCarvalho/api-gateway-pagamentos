@@ -110,7 +110,7 @@ public class ProcessPaymentController : ControllerBase
     public async Task<IActionResult> GetTokenCard([FromBody] TokenCardDto card)
     {
         try
-        { 
+        {
             if (!Request.Headers.TryGetValue("Authorization", out var tokenHeader))
             {
                 return Unauthorized($"Token não fornecido no cabeçalho Authorization.");
@@ -226,63 +226,67 @@ public class ProcessPaymentController : ControllerBase
     // }
     // #endregion
 
-    // #region Gerar Criptograma do Cartão
-    // [Authorize]
-    // [HttpPost("gerar-criptograma-cartao")]
-    // [ProducesResponseType(StatusCodes.Status200OK)]
-    // [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-    // [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    // [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    // [Produces("application/json")]
-    // public async Task<IActionResult> GetCardCryptogram([FromBody] CardCryptogramDto cardCryptogram)
-    // {
-    //     try
-    //     {
-    //         var token = await _getnetService.GetTokenAsync();
+    #region Gerar Criptograma do Cartão
+    [HttpPost("gerar-criptograma-cartao")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json")]
+    public async Task<IActionResult> GetCardCryptogram([FromBody] CardCryptogramDto cardCryptogram)
+    {
+        try
+        {
+            if (!Request.Headers.TryGetValue("Authorization", out var tokenHeader))
+            {
+                return Unauthorized($"Token não fornecido no cabeçalho Authorization.");
+            }
 
-    //         CardCryptogram cardCryptogramRequest = new CardCryptogram
-    //         {
-    //             NetworkTokenId = cardCryptogram.NetworkTokenId,
-    //             TransactionType = cardCryptogram.TransactionType,
-    //             CryptogramType = cardCryptogram.CryptogramType,
-    //             Amount = cardCryptogram.Amount,
-    //             CustomerId = cardCryptogram.CustomerId,
-    //             Email = cardCryptogram.Email,
-    //             CardBrand = cardCryptogram.CardBrand
-    //         };
+            string accessToken = tokenHeader.ToString();
 
-    //         var tokenCard = await _getnetService.GetCardCryptogram(cardCryptogramRequest, token.AccessToken);
+            CardCryptogram cardCryptogramRequest = new CardCryptogram
+            {
+                NetworkTokenId = cardCryptogram.NetworkTokenId,
+                TransactionType = cardCryptogram.TransactionType,
+                CryptogramType = cardCryptogram.CryptogramType,
+                Amount = cardCryptogram.Amount,
+                CustomerId = cardCryptogram.CustomerId,
+                Email = cardCryptogram.Email,
+                CardBrand = cardCryptogram.CardBrand
+            };
 
-    //         return StatusCode(StatusCodes.Status200OK, tokenCard);
-    //     }
-    //     catch (ApplicationException ex)
-    //     {
-    //         var problem = new ProblemDetails
-    //         {
-    //             Title = "Erro ao obter criptograma do cartão",
-    //             Detail = ex.Message,
-    //             Status = StatusCodes.Status400BadRequest,
-    //             Instance = HttpContext.Request.Path,
-    //         };
+            var tokenCard = await _getnetService.GetCardCryptogram(cardCryptogramRequest, accessToken);
 
-    //         problem.Extensions["errorCode"] = "CARD_CRYPTOGRAM_ERROR";
-    //         problem.Extensions["timestamp"] = DateTime.UtcNow;
+            return StatusCode(StatusCodes.Status200OK, tokenCard);
+        }
+        catch (ApplicationException ex)
+        {
+            var problem = new ProblemDetails
+            {
+                Title = "Erro ao obter criptograma do cartão",
+                Detail = ex.Message,
+                Status = StatusCodes.Status400BadRequest,
+                Instance = HttpContext.Request.Path,
+            };
 
-    //         _logger.LogError($"Erro ao obter criptograma do cartão: {ex.Message}");
-    //         return BadRequest(problem);
-    //     }
-    //     catch (HttpRequestException ex)
-    //     {
-    //         _logger.LogError($"Erro de conexão com o servidor de autenticação: {ex.Message}");
-    //         return StatusCode(StatusCodes.Status503ServiceUnavailable, $"Serviço de autenticação indisponível. Tente novamente mais tarde.");
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         _logger.LogError(ex, "Erro ao obter criptograma do cartão");
-    //         return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
-    //     }
-    // }
-    // #endregion
+            problem.Extensions["errorCode"] = "CARD_CRYPTOGRAM_ERROR";
+            problem.Extensions["timestamp"] = DateTime.UtcNow;
+
+            _logger.LogError($"Erro ao obter criptograma do cartão: {ex.Message}");
+            return BadRequest(problem);
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError($"Erro de conexão com o servidor de autenticação: {ex.Message}");
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, $"Serviço de autenticação indisponível. Tente novamente mais tarde.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao obter criptograma do cartão");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
+        }
+    }
+    #endregion
 
     #region Realizar Transação
 
@@ -304,10 +308,10 @@ public class ProcessPaymentController : ControllerBase
         {
             if (!Request.Headers.TryGetValue("Authorization", out var tokenHeader))
             {
-                return Unauthorized($"Token não fornecido no cabeçalho Authorization.");    
+                return Unauthorized($"Token não fornecido no cabeçalho Authorization.");
             }
 
-            string accessToken = tokenHeader.ToString(); 
+            string accessToken = tokenHeader.ToString();
 
             PaymentCredit payment = new PaymentCredit
             {
@@ -404,5 +408,26 @@ public class ProcessPaymentController : ControllerBase
     }
     #endregion
 
-    
+    #region Disponibilizar Seller ID
+    /// <summary>
+    /// Obtém o Seller ID configurado na aplicação.
+    /// </summary>
+    /// <returns>Retorna um objeto com o identifcador sellerId.</returns>
+    [HttpPost("seller-id")]
+    public IActionResult GetSellerId()
+    {
+        try
+        {
+            var selllerId = _getnetService.GetSellerId();
+
+            return Ok(selllerId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao obter Seller ID.");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
+        }
+    }
+    #endregion
+
 }

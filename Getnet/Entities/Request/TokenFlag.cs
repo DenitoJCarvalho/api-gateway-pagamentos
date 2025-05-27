@@ -1,5 +1,6 @@
 
 using System.Text.Json.Serialization;
+using Getnet.Enums;
 
 namespace Getnet.Entities.Request;
 
@@ -22,21 +23,17 @@ public class TokenFlag
     public string CardPan { get; set; } = string.Empty;
 
     /// <summary>
-    /// Valores possíveis:
-    /// ONFILE: solicitante do token já possui os dados PAN em seus registros.
-    /// MANUALLY_ENTERED: os dados do PAN foram digitados pelo titular do cartão.
-    /// VIA_APPLICATION: os dados PAN (ou referência) forma fornecidos por um Aplicativo Emissor.
+    /// Origem do PAN do cartão.
     /// </summary>
     [JsonPropertyName("card_pan_source")]
-    public string CardPanSource { get; set; } = string.Empty;
+    public CardPanSource CardPanSource { get; set; } 
 
     /// <summary>
     /// Identificador da Bandeira do cartão.
     /// Valores possíveis: VISA e MASTERCARD.
     /// </summary>
     [JsonPropertyName("card_brand")]
-    public string CardBrand { get; set; } = string.Empty;
-
+    public CardBrand CardBrand { get; set; } 
 
     /// <summary>
     /// Ano de expiração do cartão.

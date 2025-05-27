@@ -58,5 +58,11 @@ public interface IGetnetService
     /// <param name="token">Token de autenticação da API.</param>
     /// <returns>Um objeto <see cref="PaymentCreditResponse"/> contendo os dados da resposta da transação de crédito, como status, código de autorização, e detalhes do pagamento.</returns>
     Task<PaymentCreditResponse> Transaction(PaymentCredit payment, string token);
+
+    /// <summary>
+    /// Obtém o ID do vendedor associado à conta Getnet.
+    /// </summary>
+    /// <returns>Uma string <see cref="SellerResponse"/> contendo a indentificação do vendedor junto a Getnet </returns>
+    SellerResponse GetSellerId();
     
 }

@@ -1,6 +1,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Getnet.Enums;
 
 namespace Getnet.Controllers.Dtos;
 
@@ -15,23 +16,15 @@ public class CardCryptogramDto
 
     /// <summary>
     /// Tipo de critptografia.
-    /// Valores possíveis: 
-    /// CIT: Transação iniciada pelo cliente.
-    /// MIT: Transação iniciada pelo comerciante.
     /// </summary>
-    [Required(ErrorMessage = "Campo obrigatório")]
     [JsonPropertyName("transaction_type")]
-    public string TransactionType { get; set; } = string.Empty;
+    public CryptogramTransactionType TransactionType { get; set; } 
 
     /// <summary>
     /// Identificador da Bandeira do cartão.
-    /// Valores poss[iveis:
-    /// VISA_TAV: Valor de verificação de autenticação do token VISA.
-    /// MC_DSRP_LONG: controle remoto seguro digital Mastercard.
     /// </summary>
-    [Required(ErrorMessage = "Campo obrigatório")]
     [JsonPropertyName("cryptogram_type")]
-    public string CryptogramType { get; set; } = string.Empty;
+    public CryptogramType CryptogramType { get; set; }
 
     /// <summary>
     /// Valor monetário da transação em centavos
@@ -56,10 +49,8 @@ public class CardCryptogramDto
 
     /// <summary>
     /// Identificador da Bandeira do cartão.
-    /// Valores possíveis: VISA e MASTERCARD.
     /// </summary>
-    [Required(ErrorMessage = "Campo obrigatório")]
     [JsonPropertyName("card_brand")]
-    public string CardBrand { get; set; } = string.Empty;
+    public CardBrand CardBrand { get; set; } 
     
 }

@@ -13,19 +13,19 @@ public class TokenizationDto
     /// Tipo de tokenização.
     /// </summary>
     [JsonPropertyName("type")]
-    public TokenizationType? Type { get; set; }
+    public TokenizationType Type { get; set; }
 
     /// <summary>
     /// Valor do criptograma gerado pelo TSP (Token Service Provider)
     /// </summary>
     [JsonPropertyName("cryptogram")]
-    public string? Cryptogram { get; set; } = string.Empty;
+    public string Cryptogram { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicador ECI (Eletronic Commerce Indicator)
     /// </summary>
     [JsonPropertyName("eci")]
-    public string? Eci { get; set; } = string.Empty;
+    public Eci Eci { get; set; } 
 
     /// <summary>
     /// Código identifcador do Token Requestor
