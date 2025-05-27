@@ -20,16 +20,8 @@ public class GetnetService : IGetnetService
     private readonly HttpClient _httpClient;
     private readonly ILogger<GetnetService> _logger;
 
-    /* FLUXO MÍNIMO PARA UMA TRANSAÇÂO
-        O fluxo mínimo para uma transação de crédito na Getnet
-        gerar token - /auth/oauth/v2/token
-        gerar token do Cartão - /v1/tokens/card
-        gerar Criptograma - /v1/tokenization/crypt
-        realizar transação - /v1/payments/credit 
+    private readonly LogService _logService;
 
-        /v1/tokenization/token - Usado apenas em tokenização via TSP(Apple Apy, Google Pay, etc)
-        /v1/cards/verification - Verifica validade do cartão - não é exigido antes de uma transação.
-    */
     private readonly string[] _authTokenUrl = [
         "/auth/oauth/v2/token",
         "/v1/tokens/card",
@@ -55,12 +47,14 @@ public class GetnetService : IGetnetService
     public GetnetService(
         HttpClient httpClient,
         ILogger<GetnetService> logger,
+        LogService logService,
         IOptions<GetnetSettings> options
     )
     {
         _httpClient = httpClient;
         _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
         _logger = logger;
+        _logService = logService;
         _settings = options.Value;
     }
     #endregion
@@ -93,6 +87,10 @@ public class GetnetService : IGetnetService
 
             if (string.IsNullOrEmpty(_settings.ClienteId) || string.IsNullOrEmpty(_settings.ClienteSecret))
             {
+                _logger.LogError("Credenciais do cliente não configuradas corretamente.");
+
+                _logService.LogError("Credenciais do cliente não configuradas corretamente.");
+
                 throw new ApplicationException("Credenciais do cliente não configuradas corretamente.");
             }
 
@@ -159,6 +157,8 @@ public class GetnetService : IGetnetService
 
             _logger.LogError($"Erro ao obter token do cartão: {(int)response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
 
+            _logService.LogError($"Erro ao obter token do cartão: {(int)response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
+
             throw new GetnetApiExceptions(
                 $"Erro ao obter token do cartão: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}",
                 (int)response.StatusCode
@@ -166,7 +166,6 @@ public class GetnetService : IGetnetService
         }
 
         var content = await response.Content.ReadAsStringAsync();
-        _logger.LogInformation($"Conteúdo bruto retornada da API: {content}");
 
         var tokenCardResponse = JsonSerializer.Deserialize<TokenCardResponse>(content, new JsonSerializerOptions
         {
@@ -189,8 +188,11 @@ public class GetnetService : IGetnetService
         if (!response.IsSuccessStatusCode)
         {
             var errorContent = await response.Content.ReadAsStringAsync();
-            _logger.LogError($"Erro ao realizar transação: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
+
+            _logger.LogError($"Erro ao obter token da bandeira: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
             
+            _logService.LogError($"Erro ao obter token da bandeira: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
+
             throw new GetnetApiExceptions(
                 $"Erro ao obter token da bandeira: {response.StatusCode} - {response.ReasonPhrase}",
                 (int)response.StatusCode
@@ -220,7 +222,10 @@ public class GetnetService : IGetnetService
         if (!response.IsSuccessStatusCode)
         {
             var errorContent = await response.Content.ReadAsStringAsync();
-            _logger.LogError($"Erro ao realizar transação: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
+
+            _logger.LogError($"Erro ao obter criptograma do cartão: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
+
+            _logService.LogError($"Erro ao obter criptograma do cartão: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
 
             throw new GetnetApiExceptions(
                 $"Erro ao obter criptograma do cartão: {response.StatusCode} - {response.ReasonPhrase}",
@@ -250,6 +255,11 @@ public class GetnetService : IGetnetService
 
         if (!response.IsSuccessStatusCode)
         {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogError($"Erro ao fazer verificação do cartão: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
+
+            _logService.LogError($"Erro ao fazer verificação do cartão: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
+
             throw new GetnetApiExceptions(
                 $"Erro ao fazer verificação do cartão: {response.StatusCode} - {response.ReasonPhrase}",
                 (int)response.StatusCode
@@ -280,7 +290,10 @@ public class GetnetService : IGetnetService
         if (!response.IsSuccessStatusCode)
         {
             var errorContent = await response.Content.ReadAsStringAsync();
+
             _logger.LogError($"Erro ao realizar transação: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
+
+            _logService.LogError($"Erro ao realizar transação: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
 
             throw new GetnetApiExceptions(
                 $"Erro ao realizar transação: {response.StatusCode} - {response.ReasonPhrase}",
@@ -314,6 +327,9 @@ public class GetnetService : IGetnetService
             if (string.IsNullOrEmpty(seller.SellerId))
             {
                 _logger.LogError("SellerId não configurado.");
+
+                _logService.LogError("SellerId não configurado.");
+
                 throw new GetnetApiExceptions("SellerId não configurado.", 400);
             }
 

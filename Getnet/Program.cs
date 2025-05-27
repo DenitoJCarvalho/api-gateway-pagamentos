@@ -22,6 +22,11 @@ builder.Services.AddHttpClient<IGetnetService, GetnetService>()
     {
         AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
     });
+
+
+//Configuração do LogService
+builder.Services.AddSingleton<LogService>();
+
 #endregion
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

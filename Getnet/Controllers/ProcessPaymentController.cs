@@ -8,6 +8,7 @@ using Getnet.Services.Interfaces;
 using Getnet.Infrastructure.Configurations.Getnet;
 using Microsoft.Extensions.Options;
 using Getnet.Enums;
+using Getnet.Services;
 
 namespace Getnet.Controllers;
 
@@ -18,9 +19,8 @@ public class ProcessPaymentController : ControllerBase
 {
     #region Propriedades
     private readonly ILogger<ProcessPaymentController> _logger;
+    private readonly LogService _logService;
     private readonly IGetnetService _getnetService;
-
-    private readonly IHttpContextAccessor _contextAccessor;
 
     private readonly GetnetSettings _settings;
     #endregion
@@ -28,14 +28,14 @@ public class ProcessPaymentController : ControllerBase
     #region Construtores
     public ProcessPaymentController(
         ILogger<ProcessPaymentController> logger,
+        LogService logService,
         IGetnetService getnetService,
-        IHttpContextAccessor contextAccessor,
          IOptions<GetnetSettings> options
     )
     {
         _logger = logger;
+        _logService = logService;
         _getnetService = getnetService;
-        _contextAccessor = contextAccessor;
         _settings = options.Value;
     }
     #endregion
@@ -66,6 +66,7 @@ public class ProcessPaymentController : ControllerBase
         catch (HttpRequestException ex)
         {
             _logger.LogError($"Erro de conexão com o servidor de autenticação: {ex.Message}");
+            _logService.LogError($"Erro de conexão com o servidor de autenticação: {ex.Message}");
             return StatusCode(StatusCodes.Status503ServiceUnavailable, $"Serviço de autenticação indisponível. Tente novamente mais tarde.");
         }
         catch (ApplicationException ex)
@@ -82,11 +83,13 @@ public class ProcessPaymentController : ControllerBase
             problem.Extensions["timestamp"] = DateTime.UtcNow;
 
             _logger.LogError($"Erro ao obter token: {ex.Message}");
+            _logService.LogError($"Erro ao obter token: {ex.Message}");
             return BadRequest(problem);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao obter token");
+            _logService.LogError($"Erro ao obter token: {ex.Message}");
             return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
         }
     }
@@ -113,6 +116,8 @@ public class ProcessPaymentController : ControllerBase
         {
             if (!Request.Headers.TryGetValue("Authorization", out var tokenHeader))
             {
+                _logger.LogError("Token de autenticação não fornecido no cabeçalho Authorization.");
+                _logService.LogError("Token de autenticação não fornecido no cabeçalho Authorization.");
                 return Unauthorized($"Token não fornecido no cabeçalho Authorization.");
             }
 
@@ -121,7 +126,7 @@ public class ProcessPaymentController : ControllerBase
             if (string.IsNullOrWhiteSpace(accessToken))
             {
                 _logger.LogError("Token de autenticação não retornado ou inválido.");
-
+                _logService.LogError("Token de autenticação não retornado ou inválido.");
                 return StatusCode(StatusCodes.Status502BadGateway, "Erro ao obter token de autenticação.");
             }
 
@@ -152,16 +157,19 @@ public class ProcessPaymentController : ControllerBase
             problem.Extensions["timestamp"] = DateTime.UtcNow;
 
             _logger.LogError($"Erro ao obter token do cartão: {ex.Message}");
+            _logService.LogError($"Erro ao obter token do cartão: {ex.Message}");
             return BadRequest(problem);
         }
         catch (HttpRequestException ex)
         {
             _logger.LogError($"Erro de conexão com o servidor de autenticação: {ex.Message}");
+            _logService.LogError($"Erro de conexão com o servidor de autenticação: {ex.Message}");
             return StatusCode(StatusCodes.Status503ServiceUnavailable, $"Serviço de autenticação indisponível. Tente novamente mais tarde.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao obter token do cartão");
+            _logService.LogError($"Erro ao obter token do cartão: {ex.Message}");
             return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
         }
     }
@@ -186,6 +194,7 @@ public class ProcessPaymentController : ControllerBase
         {
             if (!Request.Headers.TryGetValue("Authorization", out var tokenHeader))
             {
+                _logService.LogError("Token de autenticação não fornecido no cabeçalho Authorization.");
                 return Unauthorized($"Token não fornecido no cabeçalho Authorization.");
             }
 
@@ -221,16 +230,19 @@ public class ProcessPaymentController : ControllerBase
             problem.Extensions["timestamp"] = DateTime.UtcNow;
 
             _logger.LogError($"Erro ao obter token da bandeira: {ex.Message}");
+            _logService.LogError($"Erro ao obter token da bandeira: {ex.Message}");
             return BadRequest(problem);
         }
         catch (HttpRequestException ex)
         {
             _logger.LogError($"Erro de conexão com o servidor de autenticação: {ex.Message}");
+            _logService.LogError($"Erro de conexão com o servidor de autenticação: {ex.Message}");
             return StatusCode(StatusCodes.Status503ServiceUnavailable, $"Serviço de autenticação indisponível. Tente novamente mais tarde.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao obter token da bandeira");
+            _logService.LogError($"Erro ao obter token da bandeira: {ex.Message}");
             return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
         }
     }
@@ -255,6 +267,7 @@ public class ProcessPaymentController : ControllerBase
         {
             if (!Request.Headers.TryGetValue("Authorization", out var tokenHeader))
             {
+                _logService.LogError("Token de autenticação não fornecido no cabeçalho Authorization.");
                 return Unauthorized($"Token não fornecido no cabeçalho Authorization.");
             }
 
@@ -289,16 +302,19 @@ public class ProcessPaymentController : ControllerBase
             problem.Extensions["timestamp"] = DateTime.UtcNow;
 
             _logger.LogError($"Erro ao obter criptograma do cartão: {ex.Message}");
+            _logService.LogError($"Erro ao obter criptograma do cartão: {ex.Message}");
             return BadRequest(problem);
         }
         catch (HttpRequestException ex)
         {
             _logger.LogError($"Erro de conexão com o servidor de autenticação: {ex.Message}");
+            _logService.LogError($"Erro de conexão com o servidor de autenticação: {ex.Message}");
             return StatusCode(StatusCodes.Status503ServiceUnavailable, $"Serviço de autenticação indisponível. Tente novamente mais tarde.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao obter criptograma do cartão");
+            _logService.LogError($"Erro ao obter criptograma do cartão: {ex.Message}");
             return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
         }
     }
@@ -324,6 +340,7 @@ public class ProcessPaymentController : ControllerBase
         {
             if (!Request.Headers.TryGetValue("Authorization", out var tokenHeader))
             {
+                _logService.LogError("Token de autenticação não fornecido no cabeçalho Authorization.");
                 return Unauthorized($"Token não fornecido no cabeçalho Authorization.");
             }
 
@@ -382,6 +399,7 @@ public class ProcessPaymentController : ControllerBase
             };
 
             _logger.LogInformation($"Payload enviado: {payment}");
+            _logService.LogError($"Payload enviado: {payment}");
             var paymentResponse = await _getnetService.Transaction(payment, accessToken);
 
             return StatusCode(StatusCodes.Status200OK, paymentResponse);
@@ -401,17 +419,19 @@ public class ProcessPaymentController : ControllerBase
             problem.Extensions["timestamp"] = DateTime.UtcNow;
 
             _logger.LogError($"Erro ao realizar transação de pagamento: {ex.Message}");
-
+            _logService.LogError($"Erro ao realizar transação de pagamento: {ex.Message}");
             return BadRequest(problem);
         }
         catch (HttpRequestException ex)
         {
             _logger.LogError($"Erro de conexão com o servidor de autenticação: {ex.Message}");
+            _logService.LogError($"Erro de conexão com o servidor de autenticação: {ex.Message}");
             return StatusCode(StatusCodes.Status503ServiceUnavailable, $"Serviço de autenticação indisponível. Tente novamente mais tarde.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao realizar transação de pagamento.");
+            _logService.LogError($"Erro ao realizar transação de pagamento: {ex.Message}");
             return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
         }
     }
@@ -434,6 +454,7 @@ public class ProcessPaymentController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao obter Seller ID.");
+            _logService.LogError($"Erro ao obter Seller ID: {ex.Message}");
             return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
         }
     }
