@@ -167,67 +167,83 @@ public class ProcessPaymentController : ControllerBase
     }
     #endregion
 
-    // #region  Gerar Token da Bandeira
-    // [Authorize]
-    // [HttpPost("gerar-token-bandeira")]
-    // [ProducesResponseType(StatusCodes.Status200OK)]
-    // [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-    // [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    // [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    // [Produces("application/json")]
-    // public async Task<IActionResult> GetTokenFlag([FromBody] TokenFlagDto tokenFlag)
-    // {
-    //     try
-    //     {
-    //         var token = await _getnetService.GetTokenAsync();
+    #region  Gerar Token da Bandeira
+    /// <summary>
+    /// Gera um token de bandeira para o cartão de crédito informado, necessário para realizar transações com bandeiras específicas.
+    /// </summary>
+    /// <param name="tokenFlag"></param>
+    /// <returns>Retorna um objeto com os dados do token de bandeira em caso de sucesso (HTTP 200),
+    /// ou um objeto <see cref="ProblemDetails"/> com informações sobre o erro ocorrido.</returns>
+    [HttpPost("generate-token-brand")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json")]
+    public async Task<IActionResult> GetTokenFlag([FromBody] TokenFlagDto tokenFlag)
+    {
+        try
+        {
+            if (!Request.Headers.TryGetValue("Authorization", out var tokenHeader))
+            {
+                return Unauthorized($"Token não fornecido no cabeçalho Authorization.");
+            }
 
-    //         TokenFlag tokenFlagRequest = new TokenFlag
-    //         {
-    //             CustomerId = tokenFlag.CustomerId,
-    //             CardPan = tokenFlag.CardPan,
-    //             CardPanSource = tokenFlag.CardPanSource,
-    //             CardBrand = tokenFlag.CardBrand,
-    //             ExpirationYear = tokenFlag.ExpirationYear,
-    //             ExpirationMonth = tokenFlag.ExpirationMonth,
-    //             SecurityCode = tokenFlag.SecurityCode,
-    //             Email = tokenFlag.Email
-    //         };
+            string accessToken = tokenHeader.ToString();
 
-    //         var tokenCard = await _getnetService.GetTokenFlag(tokenFlagRequest, token.AccessToken);
+            TokenFlag tokenFlagRequest = new TokenFlag
+            {
+                CustomerId = tokenFlag.CustomerId,
+                CardPan = tokenFlag.CardPan,
+                CardPanSource = CardPanSource.ManuallyEntered,
+                CardBrand = tokenFlag.CardBrand,
+                ExpirationYear = tokenFlag.ExpirationYear,
+                ExpirationMonth = tokenFlag.ExpirationMonth,
+                SecurityCode = tokenFlag.SecurityCode,
+                Email = tokenFlag.Email
+            };
 
-    //         return StatusCode(StatusCodes.Status200OK, tokenCard);
-    //     }
-    //     catch (ApplicationException ex)
-    //     {
-    //         var problem = new ProblemDetails
-    //         {
-    //             Title = "Erro ao obter token da bandeira",
-    //             Detail = ex.Message,
-    //             Status = StatusCodes.Status400BadRequest,
-    //             Instance = HttpContext.Request.Path,
-    //         };
+            var tokenCard = await _getnetService.GetTokenFlag(tokenFlagRequest, accessToken);
 
-    //         problem.Extensions["errorCode"] = "TOKEN_FLAG_ERROR";
-    //         problem.Extensions["timestamp"] = DateTime.UtcNow;
+            return StatusCode(StatusCodes.Status200OK, tokenCard);
+        }
+        catch (ApplicationException ex)
+        {
+            var problem = new ProblemDetails
+            {
+                Title = "Erro ao obter token da bandeira",
+                Detail = ex.Message,
+                Status = StatusCodes.Status400BadRequest,
+                Instance = HttpContext.Request.Path,
+            };
 
-    //         _logger.LogError($"Erro ao obter token da bandeira: {ex.Message}");
-    //         return BadRequest(problem);
-    //     }
-    //     catch (HttpRequestException ex)
-    //     {
-    //         _logger.LogError($"Erro de conexão com o servidor de autenticação: {ex.Message}");
-    //         return StatusCode(StatusCodes.Status503ServiceUnavailable, $"Serviço de autenticação indisponível. Tente novamente mais tarde.");
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         _logger.LogError(ex, "Erro ao obter token da bandeira");
-    //         return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
-    //     }
-    // }
-    // #endregion
+            problem.Extensions["errorCode"] = "TOKEN_FLAG_ERROR";
+            problem.Extensions["timestamp"] = DateTime.UtcNow;
+
+            _logger.LogError($"Erro ao obter token da bandeira: {ex.Message}");
+            return BadRequest(problem);
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError($"Erro de conexão com o servidor de autenticação: {ex.Message}");
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, $"Serviço de autenticação indisponível. Tente novamente mais tarde.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao obter token da bandeira");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Erro interno do servidor");
+        }
+    }
+    #endregion
 
     #region Gerar Criptograma do Cartão
-    [HttpPost("gerar-criptograma-cartao")]
+    /// <summary>
+    /// Gera um criptograma para o cartão de crédito informado, necessário para transações com cartões tokenizados.
+    /// </summary>
+    /// <param name="cardCryptogram"></param>
+    /// <returns>Retorna um objeto com os dados de criptograma em caso de sucesso (HTTP 200),
+    /// ou um objeto <see cref="ProblemDetails"/> com informações sobre o erro ocorrido.</returns>
+    [HttpPost("generate-card-cryptogram")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
@@ -247,7 +263,7 @@ public class ProcessPaymentController : ControllerBase
             CardCryptogram cardCryptogramRequest = new CardCryptogram
             {
                 NetworkTokenId = cardCryptogram.NetworkTokenId,
-                TransactionType = cardCryptogram.TransactionType,
+                TransactionType = CryptogramTransactionType.CIT,
                 CryptogramType = cardCryptogram.CryptogramType,
                 Amount = cardCryptogram.Amount,
                 CustomerId = cardCryptogram.CustomerId,
@@ -351,14 +367,7 @@ public class ProcessPaymentController : ControllerBase
                     SaveCardData = false,
                     TransactionType = paymentCredit.Credit.TransactionType,
                     NumberInstallments = paymentCredit.Credit.NumberInstallments,
-                    GatewayId = paymentCredit.Credit.GatewayId,
                     TransactionId = paymentCredit.Credit.TransactionId,
-                    Tokenization = new Tokenization
-                    {
-                        Type = paymentCredit.Credit.Tokenization.Type,
-                        Eci = paymentCredit.Credit.Tokenization.Eci,
-                        Cryptogram = paymentCredit.Credit.Tokenization.Cryptogram,
-                    },
 
                     Card = new CardVerification
                     {

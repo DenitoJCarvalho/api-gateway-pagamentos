@@ -1,5 +1,4 @@
 
-
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Getnet.Entities.Dto;
@@ -20,7 +19,7 @@ public class CreditDto
     /// Merchant Payment Gateway ID.
     /// </summary>
     [JsonPropertyName("gateway_id")]
-    public string GatewayId { get; set; } = string.Empty;
+    public string? GatewayId { get; set; }
 
     /// <summary>
     /// Número de parcelas para uma transação de crédito parcelado.
@@ -49,12 +48,14 @@ public class CreditDto
     public CardVerificationDto Card { get; set; } = new CardVerificationDto { };
 
     [JsonPropertyName("tokenization")]
-    public TokenizationDto Tokenization { get; set; } = new TokenizationDto { };
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public TokenizationDto? Tokenization { get; set; }
 
     /// <summary>
     /// Tipo de COF (Credential On File)
     /// </summary>
     [JsonPropertyName("credentials_on_file_type")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public CredentialsOnFileType? CredentialsOnFileType { get; set; }
 
     /// <summary>

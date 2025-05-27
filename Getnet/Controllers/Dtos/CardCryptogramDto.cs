@@ -15,12 +15,6 @@ public class CardCryptogramDto
     public string NetworkTokenId { get; set; } = string.Empty;
 
     /// <summary>
-    /// Tipo de critptografia.
-    /// </summary>
-    [JsonPropertyName("transaction_type")]
-    public CryptogramTransactionType TransactionType { get; set; } 
-
-    /// <summary>
     /// Identificador da Bandeira do cartão.
     /// </summary>
     [JsonPropertyName("cryptogram_type")]

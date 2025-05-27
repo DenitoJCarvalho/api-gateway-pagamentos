@@ -1,6 +1,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Getnet.Enums;
 
 namespace Getnet.Controllers.Dtos;
 
@@ -27,22 +28,11 @@ public class TokenFlagDto
     public string CardPan { get; set; } = string.Empty;
 
     /// <summary>
-    /// Valores possíveis:
-    /// ONFILE: solicitante do token já possui os dados PAN em seus registros.
-    /// MANUALLY_ENTERED: os dados do PAN foram digitados pelo titular do cartão.
-    /// VIA_APPLICATION: os dados PAN (ou referência) forma fornecidos por um Aplicativo Emissor.
-    /// </summary>
-    [Required(ErrorMessage = "Campo obrigatório.")]
-    [JsonPropertyName("card_pan_source")]
-    public string CardPanSource { get; set; } = string.Empty;
-
-    /// <summary>
     /// Identificador da Bandeira do cartão.
     /// Valores possíveis: VISA e MASTERCARD.
     /// </summary>
-    [Required(ErrorMessage = "Campo obrigatório.")]
     [JsonPropertyName("card_brand")]
-    public string CardBrand { get; set; } = string.Empty;
+    public CardBrand CardBrand { get; set; } 
 
 
     /// <summary>

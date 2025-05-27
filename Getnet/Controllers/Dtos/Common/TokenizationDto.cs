@@ -22,12 +22,6 @@ public class TokenizationDto
     public string Cryptogram { get; set; } = string.Empty;
 
     /// <summary>
-    /// Indicador ECI (Eletronic Commerce Indicator)
-    /// </summary>
-    [JsonPropertyName("eci")]
-    public Eci Eci { get; set; } 
-
-    /// <summary>
     /// Código identifcador do Token Requestor
     /// </summary>
     [JsonPropertyName("requestor_id")]

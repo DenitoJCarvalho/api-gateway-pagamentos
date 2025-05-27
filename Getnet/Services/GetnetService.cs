@@ -188,6 +188,9 @@ public class GetnetService : IGetnetService
 
         if (!response.IsSuccessStatusCode)
         {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogError($"Erro ao realizar transação: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
+            
             throw new GetnetApiExceptions(
                 $"Erro ao obter token da bandeira: {response.StatusCode} - {response.ReasonPhrase}",
                 (int)response.StatusCode

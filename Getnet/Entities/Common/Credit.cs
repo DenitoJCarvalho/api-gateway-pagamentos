@@ -34,7 +34,7 @@ public class Credit
     /// Merchant Payment Gateway ID.
     /// </summary>
     [JsonPropertyName("gateway_id")]
-    public string GatewayId { get; set; } = string.Empty;
+    public string? GatewayId { get; set; }
 
     /// <summary>
     /// Número de parcelas para uma transação de crédito parcelado.
@@ -61,7 +61,7 @@ public class Credit
     public CardVerification Card { get; set; } = new CardVerification();
 
     [JsonPropertyName("tokenization")]
-    public Tokenization Tokenization { get; set; } = new Tokenization();
+    public Tokenization? Tokenization { get; set; } 
 
     /// <summary>
     /// Tipo de COF (Credential On File)
