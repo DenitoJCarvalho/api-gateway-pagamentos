@@ -21,22 +21,18 @@ public class ProcessPaymentController : ControllerBase
 {
     #region Propriedades
     private readonly ILogger<ProcessPaymentController> _logger;
-    private readonly LogService _logService;
     private readonly IGetnetService _getnetService;
-
     private readonly GetnetSettings _settings;
     #endregion
 
     #region Construtores
     public ProcessPaymentController(
         ILogger<ProcessPaymentController> logger,
-        LogService logService,
         IGetnetService getnetService,
          IOptions<GetnetSettings> options
     )
     {
         _logger = logger;
-        _logService = logService;
         _getnetService = getnetService;
         _settings = options.Value;
     }

@@ -20,8 +20,6 @@ public class GetnetService : IGetnetService
     private readonly HttpClient _httpClient;
     private readonly ILogger<GetnetService> _logger;
 
-    private readonly LogService _logService;
-
     private readonly string[] _authTokenUrl = [
         "/auth/oauth/v2/token",
         "/v1/tokens/card",
@@ -47,14 +45,12 @@ public class GetnetService : IGetnetService
     public GetnetService(
         HttpClient httpClient,
         ILogger<GetnetService> logger,
-        LogService logService,
         IOptions<GetnetSettings> options
     )
     {
         _httpClient = httpClient;
         _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
         _logger = logger;
-        _logService = logService;
         _settings = options.Value;
     }
     #endregion
