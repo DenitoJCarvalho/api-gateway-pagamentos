@@ -71,6 +71,28 @@ public class ProcessPaymentController : ControllerBase
  
             return StatusCode(StatusCodes.Status503ServiceUnavailable, $"Serviço de autenticação indisponível. Tente novamente mais tarde.");
         }
+        catch (GetnetApiExceptions ex)
+        {
+            var problem = new ProblemDetails
+            {
+                Title = "Erro ao obter token de autenticação",
+                Detail = ex.Message,
+                Status = ex.StatusCode,
+                Instance = HttpContext.Request.Path,
+            };
+
+            if (!string.IsNullOrEmpty(ex.ErrorContent))
+            {
+                problem.Extensions["getnetError"] = JsonSerializer.Deserialize<object>(ex.ErrorContent);
+            }
+
+            problem.Extensions["errorCode"] = "TOKENs_ERROR";
+            problem.Extensions["timestamp"] = DateTime.UtcNow;
+
+            _logger.LogError($"Erro da getnet ao obter tooken de autenticação: {ex.Message} - {ex.ErrorContent}");
+
+            return StatusCode(ex.StatusCode, problem);
+        }
         catch (ApplicationException ex)
         {
             var problem = new ProblemDetails
@@ -142,6 +164,28 @@ public class ProcessPaymentController : ControllerBase
 
             return StatusCode(StatusCodes.Status201Created, tokenCard);
         }
+        catch (GetnetApiExceptions ex)
+        {
+            var problem = new ProblemDetails
+            {
+                Title = "Erro ao obter token do cartão.",
+                Detail = ex.Message,
+                Status = ex.StatusCode,
+                Instance = HttpContext.Request.Path,
+            };
+
+            if (!string.IsNullOrEmpty(ex.ErrorContent))
+            {
+                problem.Extensions["getnetError"] = JsonSerializer.Deserialize<object>(ex.ErrorContent);
+            }
+
+            problem.Extensions["errorCode"] = "TOKEN_CARD_ERROR";
+            problem.Extensions["timestamp"] = DateTime.UtcNow;
+
+            _logger.LogError($"Erro da getnet ao obter token do cartão: {ex.Message} - {ex.ErrorContent}");
+
+            return StatusCode(ex.StatusCode, problem);
+        }
         catch (ApplicationException ex)
         {
 
@@ -157,7 +201,7 @@ public class ProcessPaymentController : ControllerBase
             problem.Extensions["timestamp"] = DateTime.UtcNow;
 
             _logger.LogError($"Erro ao obter token do cartão: {ex.Message}");
- 
+
             return BadRequest(problem);
         }
         catch (HttpRequestException ex)
@@ -215,6 +259,28 @@ public class ProcessPaymentController : ControllerBase
 
             return StatusCode(StatusCodes.Status200OK, tokenCard);
         }
+        catch (GetnetApiExceptions ex)
+        {
+            var problem = new ProblemDetails
+            {
+                Title = "Erro ao obter token da bandeira.",
+                Detail = ex.Message,
+                Status = ex.StatusCode,
+                Instance = HttpContext.Request.Path,
+            };
+
+            if (!string.IsNullOrEmpty(ex.ErrorContent))
+            {
+                problem.Extensions["getnetError"] = JsonSerializer.Deserialize<object>(ex.ErrorContent);
+            }
+
+            problem.Extensions["errorCode"] = "TOKEN_FLAG_ERROR";
+            problem.Extensions["timestamp"] = DateTime.UtcNow;
+
+            _logger.LogError($"Erro da getnet ao obter token da bandeira: {ex.Message} - {ex.ErrorContent}");
+
+            return StatusCode(ex.StatusCode, problem);
+        }
         catch (ApplicationException ex)
         {
             var problem = new ProblemDetails
@@ -229,7 +295,7 @@ public class ProcessPaymentController : ControllerBase
             problem.Extensions["timestamp"] = DateTime.UtcNow;
 
             _logger.LogError($"Erro ao obter token da bandeira: {ex.Message}");
- 
+
             return BadRequest(problem);
         }
         catch (HttpRequestException ex)
@@ -285,6 +351,28 @@ public class ProcessPaymentController : ControllerBase
             var tokenCard = await _getnetService.GetCardCryptogram(cardCryptogramRequest, accessToken);
 
             return StatusCode(StatusCodes.Status200OK, tokenCard);
+        }
+        catch (GetnetApiExceptions ex)
+        {
+            var problem = new ProblemDetails
+            {
+                Title = "Erro ao obter criptograma do cartão.",
+                Detail = ex.Message,
+                Status = ex.StatusCode,
+                Instance = HttpContext.Request.Path,
+            };
+
+            if (!string.IsNullOrEmpty(ex.ErrorContent))
+            {
+                problem.Extensions["getnetError"] = JsonSerializer.Deserialize<object>(ex.ErrorContent);
+            }
+
+            problem.Extensions["errorCode"] = "CARD_CRYPTOGRAM_ERROR";
+            problem.Extensions["timestamp"] = DateTime.UtcNow;
+
+            _logger.LogError($"Erro da getnet ao obter criptograma do cartão: {ex.Message} - {ex.ErrorContent}");
+
+            return StatusCode(ex.StatusCode, problem);
         }
         catch (ApplicationException ex)
         {
