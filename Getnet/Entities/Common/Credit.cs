@@ -34,7 +34,7 @@ public class Credit
     /// Merchant Payment Gateway ID.
     /// </summary>
     [JsonPropertyName("gateway_id")]
-    public string? GatewayId { get; set; }
+    public string? GatewayId { get; set; } 
 
     /// <summary>
     /// Número de parcelas para uma transação de crédito parcelado.

@@ -16,12 +16,6 @@ public class CreditDto
     public TransactionType TransactionType { get; set; }
 
     /// <summary>
-    /// Merchant Payment Gateway ID.
-    /// </summary>
-    [JsonPropertyName("gateway_id")]
-    public string? GatewayId { get; set; }
-
-    /// <summary>
     /// Número de parcelas para uma transação de crédito parcelado.
     /// </summary>
     [Required(ErrorMessage = "Campo obrigatório.")]

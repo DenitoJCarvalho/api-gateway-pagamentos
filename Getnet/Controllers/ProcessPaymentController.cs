@@ -9,6 +9,8 @@ using Getnet.Infrastructure.Configurations.Getnet;
 using Microsoft.Extensions.Options;
 using Getnet.Enums;
 using Getnet.Services;
+using Getnet.Exceptions;
+using System.Text.Json;
 
 namespace Getnet.Controllers;
 
@@ -398,12 +400,31 @@ public class ProcessPaymentController : ControllerBase
                 }
             };
 
-            _logger.LogInformation($"Payload enviado: {payment}");
-            _logService.LogError($"Payload enviado: {payment}");
             var paymentResponse = await _getnetService.Transaction(payment, accessToken);
 
             return StatusCode(StatusCodes.Status200OK, paymentResponse);
 
+        }
+        catch (GetnetApiExceptions ex)
+        {
+            var problem = new ProblemDetails
+            {
+                Title = "Erro ao realizar transação de pagamento.",
+                Detail = ex.Message,
+                Status = ex.StatusCode,
+                Instance = HttpContext.Request.Path,
+            };
+
+            if (!string.IsNullOrEmpty(ex.ErrorContent))
+            {
+                problem.Extensions["getnetError"] = JsonSerializer.Deserialize<object>(ex.ErrorContent);
+            }
+
+            problem.Extensions["errorCode"] = "PAYMENT_CREDIT_ERROR";
+            problem.Extensions["timestamp"] = DateTime.UtcNow;
+
+            _logger.LogError($"Erro da getnet ao realizar transação de pagamento: {ex.Message} - {ex.ErrorContent}");
+            return StatusCode(ex.StatusCode, problem);
         }
         catch (ApplicationException ex)
         {

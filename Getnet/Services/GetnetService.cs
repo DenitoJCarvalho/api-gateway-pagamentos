@@ -258,11 +258,10 @@ public class GetnetService : IGetnetService
             var errorContent = await response.Content.ReadAsStringAsync();
             _logger.LogError($"Erro ao fazer verificação do cartão: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
 
-            _logService.LogError($"Erro ao fazer verificação do cartão: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
-
             throw new GetnetApiExceptions(
                 $"Erro ao fazer verificação do cartão: {response.StatusCode} - {response.ReasonPhrase}",
-                (int)response.StatusCode
+                (int)response.StatusCode,
+                errorContent
             );
         }
 
@@ -293,11 +292,10 @@ public class GetnetService : IGetnetService
 
             _logger.LogError($"Erro ao realizar transação: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
 
-            _logService.LogError($"Erro ao realizar transação: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
-
             throw new GetnetApiExceptions(
                 $"Erro ao realizar transação: {response.StatusCode} - {response.ReasonPhrase}",
-                (int)response.StatusCode
+                (int)response.StatusCode,
+                errorContent
             );
         }
 
@@ -327,8 +325,6 @@ public class GetnetService : IGetnetService
             if (string.IsNullOrEmpty(seller.SellerId))
             {
                 _logger.LogError("SellerId não configurado.");
-
-                _logService.LogError("SellerId não configurado.");
 
                 throw new GetnetApiExceptions("SellerId não configurado.", 400);
             }
