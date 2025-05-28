@@ -89,8 +89,6 @@ public class GetnetService : IGetnetService
             {
                 _logger.LogError("Credenciais do cliente não configuradas corretamente.");
 
-                _logService.LogError("Credenciais do cliente não configuradas corretamente.");
-
                 throw new ApplicationException("Credenciais do cliente não configuradas corretamente.");
             }
 
@@ -157,11 +155,10 @@ public class GetnetService : IGetnetService
 
             _logger.LogError($"Erro ao obter token do cartão: {(int)response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
 
-            _logService.LogError($"Erro ao obter token do cartão: {(int)response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
-
             throw new GetnetApiExceptions(
                 $"Erro ao obter token do cartão: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}",
-                (int)response.StatusCode
+                (int)response.StatusCode,
+                errorContent
             );
         }
 
@@ -190,12 +187,11 @@ public class GetnetService : IGetnetService
             var errorContent = await response.Content.ReadAsStringAsync();
 
             _logger.LogError($"Erro ao obter token da bandeira: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
-            
-            _logService.LogError($"Erro ao obter token da bandeira: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
 
             throw new GetnetApiExceptions(
                 $"Erro ao obter token da bandeira: {response.StatusCode} - {response.ReasonPhrase}",
-                (int)response.StatusCode
+                (int)response.StatusCode,
+                errorContent
             );
         }
 
@@ -225,11 +221,10 @@ public class GetnetService : IGetnetService
 
             _logger.LogError($"Erro ao obter criptograma do cartão: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
 
-            _logService.LogError($"Erro ao obter criptograma do cartão: {response.StatusCode} - {response.ReasonPhrase} - {errorContent}");
-
             throw new GetnetApiExceptions(
                 $"Erro ao obter criptograma do cartão: {response.StatusCode} - {response.ReasonPhrase}",
-                (int)response.StatusCode
+                (int)response.StatusCode,
+                errorContent
             );
         }
 
