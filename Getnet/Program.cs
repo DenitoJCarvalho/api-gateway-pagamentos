@@ -1,6 +1,5 @@
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Http.Json;
 using System.Reflection;
 using System.Net;
 
@@ -8,6 +7,7 @@ using Getnet.Infrastructure.Configurations.Getnet;
 using Getnet.Services.Interfaces;
 using Getnet.Services;
 using Getnet.Infrastructure.Configurations.Serialization;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +55,27 @@ builder.Services.AddCors(options =>
             .WithHeaders(headers.Split(","));
     });
 });
+#endregion
+
+//Configuração do Rate Limiter
+#region Rate Limiter
+var rateLimitConfig = builder.Configuration.GetSection("RateLimiter");
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(
+        httpContext => RateLimitPartition.GetFixedWindowLimiter("global", key => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = rateLimitConfig.GetValue<int>("PermitLimit"),
+            Window = TimeSpan.FromSeconds(rateLimitConfig.GetValue<int>("WindowSeconds")),
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            QueueLimit = rateLimitConfig.GetValue<int>("QueueLimit"),
+            AutoReplenishment = true
+        }));
+
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
+
 #endregion
 
 //Configuração do Getnet
