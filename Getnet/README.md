@@ -77,8 +77,10 @@ dotnet restore
 
 - `POST /api/ProcessPayment/generate-token` - Gera um token para autenticação da aplicação.
 - `POST /api/ProcesssPayment/generate-token-card` - Gera um token de cartão com base nos dados fornecidos.
+- `POST /api/ProcessPayment/generate-token-brand` - Gera um token de bandeira para o cartão de crédito informado, necessário para realizar transações com bandeiras específicas.
+- `POST /api/ProcessPayment/generate-card-cryptogram`- Gera um criptograma para o cartão de crédito informado, necessário para transações com cartões tokenizados
 - `POST /api/ProcessPayment/transact` - Realiza uma transação de pagamento com os dados informados.
-
+- `POST /api/ProcessPayment/seller-id` - Obtém o Seller ID configurado na aplicação.
 ---
 
 ## ✅ Testes
